@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeonScape: Modern looking old-School screensaver</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="screensaver"></canvas>
+<button id="settingsButton">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M24 13.616v-3.232l-2.869-1.02c-.198-.687-.472-1.342-.811-1.955l1.308-2.751-2.285-2.285-2.751 1.308c-.613-.339-1.268-.613-1.955-.811l-1.02-2.869h-3.232l-1.02 2.869c-.687.198-1.342.472-1.955.811l-2.751-1.308-2.285 2.285 1.308 2.751c-.339.613-.613 1.268-.811 1.955l-2.869 1.02v3.232l2.869 1.02c.198.687.472 1.342.811 1.955l-1.308 2.751 2.285 2.285 2.751-1.308c.613.339 1.268.613 1.955.811l1.02 2.869h3.232l1.02-2.869c.687-.198 1.342-.472 1.955-.811l2.751 1.308 2.285-2.285-1.308-2.751c.339-.613.613-1.268.811-1.955l2.869-1.02zm-12 2.384c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/>
+    </svg>
+</button>
+<div id="fpsCounter">FPS: Yet to be calculated</div>
+<div id="settingsPanel">
+    <button id="closeButton">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>
+        </svg>
+    </button>
+    <h2 class="neon-title">NeonScape</h2>
+    <div class="version">Version: 0.0.1-beta</div>
+    <h3>Configurations:</h3>
+
+    <div class="setting-group">
+        <h4>Line Settings <button class="reset-button" data-reset="line">Reset</button></h4>
+        <div class="setting-group-content">
+            <div class="setting">
+                <label for="drawSpeed">Line Draw Speed:</label>
+                <input type="range" id="drawSpeed" min="0.0001" max="0.1" step="0.0001" value="0.02">
+            </div>
+            <div class="setting">
+                <label for="lineWidth">Line Width:</label>
+                <div class="number-input">
+                    <button class="decrease-line-width">-</button>
+                    <input type="number" id="lineWidth" min="0.01" max="1000" value="2">
+                    <button class="increase-line-width">+</button>
+                </div>
+            </div>
+            <div class="setting">
+                <label for="lineBlur">Line Blur:</label>
+                <input type="range" id="lineBlur" min="0" max="20" step="1" value="0">
+            </div>
+            <div class="setting">
+                <label for="neonIntensity">Neon Intensity:</label>
+                <input type="range" id="neonIntensity" min="0" max="100" step="1" value="20">
+            </div>
+        </div>
+    </div>
+
+    <div class="setting-group">
+        <h4>Shape Settings <button class="reset-button" data-reset="shape">Reset</button></h4>
+        <div class="setting-group-content">
+            <div class="setting">
+                <label for="newShapeInterval" data-hint="Frequency of new shape creation">New Shape Interval:</label>
+                <input type="range" id="newShapeInterval" min="0.01" max="0.5" step="0.01" value="0.02">
+            </div>
+            <div class="setting">
+                <label for="fadeIntensity" data-hint="Speed at which shapes fade out">Fade Intensity:</label>
+                <input type="range" id="fadeIntensity" min="0.001" max="0.02" step="0.001" value="0.01">
+            </div>
+            <div class="setting">
+                <label for="maxShapes" data-hint="Maximum number of shapes on screen">Max Shapes:</label>
+                <div class="number-input">
+                    <button class="decrease">-</button>
+                    <input type="number" id="maxShapes" min="1" max="100" value="50">
+                    <button class="increase">+</button>
+                </div>
+            </div>
+            <div class="setting">
+                <label for="minPoints" data-hint="Minimum number of points per shape">Complexity:</label>
+                <div class="number-input">
+                    <button class="decrease-min-points">-</button>
+                    <input type="number" id="minPoints" min="3" max="10" value="3">
+                    <button class="increase-min-points">+</button>
+                </div>
+            </div>
+            <div class="setting">
+                <label for="maxPoints" data-hint="Maximum number of points per shape">Max Complexity:</label>
+                <div class="number-input">
+                    <button class="decrease-max-points">-</button>
+                    <input type="number" id="maxPoints" min="3" max="20" value="7">
+                    <button class="increase-max-points">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="setting-group">
+        <h4>Color Settings <button class="reset-button" data-reset="color">Reset</button></h4>
+        <div class="setting-group-content">
+            <div class="setting">
+                <label>Line Colors:</label>
+                <div id="colorPicker" class="color-picker"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="setting-group">
+        <h4>Background Settings <button class="reset-button" data-reset="background">Reset</button></h4>
+        <div class="setting-group-content">
+            <div class="setting">
+                <label>Background Source:</label>
+                <div class="image-source-buttons">
+                    <button id="urlSourceBtn">From URL</button>
+                    <button id="localSourceBtn">From Local File</button>
+                    <button id="solidColorBtn">Solid Color</button>
+                </div>
+                <div id="urlSource" class="image-source-input">
+                    <input type="text" id="backgroundImageUrl" placeholder="Enter image URL">
+                    <button id="loadBackgroundImageUrl">Load URL</button>
+                </div>
+                <div id="localSource" class="image-source-input">
+                    <label for="backgroundImageInput" class="file-input-label">Choose File</label>
+                    <input type="file" id="backgroundImageInput" accept="image/*">
+                </div>
+                <div id="solidColorSource" class="image-source-input">
+                    <input type="color" id="backgroundColor" value="#000000">
+                </div>
+                <button id="clearBackgroundImage">Clear Image</button>
+            </div>
+            <div id="backgroundBlurSetting" class="setting">
+                <label for="backgroundBlur">Background Blur:</label>
+                <input type="range" id="backgroundBlur" min="0" max="20" step="1" value="0">
+            </div>
+        </div>
+    </div>
+
+    <div class="setting-group">
+        <h4>Performance <button class="reset-button" data-reset="performance">Reset</button></h4>
+        <div class="setting-group-content">
+            <div class="setting">
+                <label for="showFPS">Show FPS Counter
+                    <input type="checkbox" id="showFPS">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="credits">
+        Created by <a href="https://github.com/EverythingSuckz" target="_blank">this guy</a>
+        with the help of AI
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

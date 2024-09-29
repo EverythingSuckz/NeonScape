@@ -1,0 +1,461 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: black;
+    font-family: Arial, sans-serif;
+}
+canvas {
+    display: block;
+}
+#settingsButton {
+    position: fixed;
+    top: 10px;
+    right: -30px;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50% 0 0 50%;
+    cursor: pointer;
+    transition: right 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+#settingsButton:hover {
+    right: -2px;
+}
+#settingsButton svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+    margin-left: 5px;
+}
+#settingsButton::after {
+    content: 'Ctrl + ,';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+}
+#settingsButton:hover::after {
+    opacity: 1;
+}
+#settingsPanel {
+    position: fixed;
+    top: 0;
+    right: -500px;
+    width: 280px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+#settingsPanel::-webkit-scrollbar {
+    width: 6px;
+}
+#settingsPanel::-webkit-scrollbar-track {
+    background: transparent;
+}
+#settingsPanel::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+#settingsPanel.open {
+    right: 0;
+}
+#settingsPanel h2 {
+    color: white;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+#settingsPanel .version {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.setting label {
+    color: white;
+}
+
+.setting input[type="range"] {
+    width: 100%;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    opacity: 0.7;
+    border-radius: 12px;
+    height: 8px;
+}
+
+.setting input[type="range"]:hover {
+    opacity: 1;
+}
+
+.setting input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+.color-item {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.2s;
+}
+.color-item:hover {
+    transform: scale(1.1);
+}
+.color-item .delete-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: rgb(0, 0, 0);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+.color-item .delete-btn:hover {
+    color: rgba(255, 0, 0, 0.671);
+    background-color: aliceblue;
+}
+.color-item.add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    position: relative;
+}
+.color-picker-container {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+.color-picker-container.active {
+    display: block;
+}
+.color-picker-ok {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.color-picker-ok:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+#closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    transition: background-color 0.3s;
+}
+#closeButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+#closeButton svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+.number-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.number-input button {
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.number-input button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#fpsCounter {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: none;
+}
+.setting input[type="checkbox"] {
+    margin-right: 10px;
+}
+#settingsPanel h3 {
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+.neon-title {
+    font-size: 28px;
+    color: #fff;
+    transition: text-shadow 0.3s ease;
+}
+.credits {
+    margin-top: 20px;
+    padding-bottom: 50px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    text-align: center;
+}
+.setting-group {
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.setting-group h4 {
+    color: #fff;
+    margin: 0;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.setting-group h4:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.setting-group h4::after {
+    content: '▼';
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.setting-group.collapsed h4::after {
+    transform: rotate(-90deg);
+}
+
+.setting-group-content {
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 17px 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 14px;
+}
+
+.setting-group.collapsed .setting-group-content {
+    max-height: 0;
+    padding: 0 10px;
+}
+.reset-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+    transition: background-color 0.3s;
+}
+.reset-button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.reset-button.modified {
+    background-color: rgba(255, 0, 0, 0.5);
+}
+.reset-button.modified:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+}
+.number-input input {
+    cursor: ew-resize;
+}
+.setting input[type="text"], .setting input[type="file"], .setting input[type="color"] {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+.setting button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-top: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.setting button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.image-source-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.image-source-buttons button {
+    flex: 1;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.image-source-buttons button.active {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.image-source-input {
+    display: none;
+}
+.image-source-input.active {
+    display: block;
+}
+.setting input[type="range"] {
+    position: relative;
+}
+.setting input[type="range"]::-webkit-slider-thumb::after {
+    content: attr(value);
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.setting input[type="range"]::-webkit-slider-thumb:hover::after {
+    opacity: 1;
+}
+
+.setting input[type=number] {
+    -webkit-appearance: none;
+    appearance: none;
+    -moz-appearance: textfield;
+}
+
+.setting input[type="text"], .setting input[type="file"], .setting input[type="color"], .setting input[type="number"] {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 14px;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+}
+.setting input[type="file"] {
+    display: none;
+}
+.setting .file-input-label {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.setting .file-input-label:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+#solidColorSource input[type="color"] {
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.color-picker input[type="color"] {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    cursor: pointer;
+}
+.setting input[type="checkbox"] {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.credits a {
+    color: rgba(255, 0, 0, 0.7);
+}
